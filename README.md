@@ -202,6 +202,8 @@ See the full guide in the [HS58-subnet README](https://github.com/Handshake58/HS
 - **60% DRAIN Claims** — Real USDC claimed from payment channels (7-day rolling window)
 - **40% Availability** — Provider responds to validator health checks with valid wallet proof
 
+> **Score showing 0?** Run a [self-test payment](docs/score-keepalive.md) to generate on-chain claims and bootstrap your score (~$0.13/test).
+
 ### TAO Rewards
 
 | Recipient | Share |
