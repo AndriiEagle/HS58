@@ -33,13 +33,13 @@ export class TpnService {
     if (params.connection_type) searchParams.set('connection_type', params.connection_type);
     if (params.whitelist?.length) searchParams.set('whitelist', params.whitelist.join(','));
     if (params.blacklist?.length) searchParams.set('blacklist', params.blacklist.join(','));
-    if (this.apiKey) searchParams.set('api_key', this.apiKey);
 
     const jsonRes = await this.fetch(`/api/lease/new?${searchParams}`);
 
     // Also fetch the text version for easy copy-paste
     searchParams.set('format', 'text');
     const textRes = await fetch(`${this.baseUrl}/api/lease/new?${searchParams}`, {
+      headers: this.authHeaders(),
       signal: AbortSignal.timeout(30000),
     });
     const configText = textRes.ok ? await textRes.text() : '';
@@ -79,9 +79,16 @@ export class TpnService {
     }
   }
 
+  private authHeaders(): Record<string, string> {
+    return this.apiKey ? { 'x-api-key': this.apiKey } : {};
+  }
+
   private async fetch(path: string): Promise<any> {
     const url = `${this.baseUrl}${path}`;
-    const res = await fetch(url, { signal: AbortSignal.timeout(30000) });
+    const res = await fetch(url, {
+      headers: this.authHeaders(),
+      signal: AbortSignal.timeout(30000),
+    });
 
     if (!res.ok) {
       const body = await res.text().catch(() => '');
